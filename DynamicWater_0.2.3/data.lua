@@ -1,0 +1,62 @@
+require "util"
+require "new-pumps.new-offshore-pump"
+--log(serpent.block(data.raw.character["character"]))
+--require("prototypes.entity.demo-entities")
+--The vanilla off shore pump is not allowed in this mod.
+--data.raw.recipe["offshore-pump"].enabled = false
+
+
+--START offshore-pump-iuput
+--offshore-pump-iuput
+--entity
+--local offshore_input = util.table.deepcopy(data.raw["offshore-pump"]["offshore-pump"])
+--offshore_input.name = "offshore-pump-input"
+--offshore_input.adjacent_tile_collision_test = {}
+--offshore_input.adjacent_tile_collision_mask = {}
+--offshore_input.minable = {mining_time = 0.1, result = "offshore-pump-input"}
+--offshore_input.pumping_speed = 0.00000001--per tick. The vanilla is 20x60/second.
+--offshore_input.fluid_capacity = 3000--The insert fluid function is called once a sec. This has to be big enough.
+--
+--
+--
+--
+--offshore_input.graphics_set.animation.north.layers[1].filename = "__DynamicWater__"..string.sub--(offshore_input.graphics_set.animation.north.layers[1].filename,9)
+----"__DynamicWater__/graphics/"
+--
+--
+--
+--log(serpent.block(offshore_input))
+--
+--
+--
+----offshore_input.picture.north.tint = {r = 0.5, g = 1, b = 0.3}
+----offshore_input.picture.south.tint = {r = 0.5, g = 1, b = 0.3}
+--data:extend({offshore_input})
+--
+--
+--
+--
+--
+--
+--
+--
+--
+--
+----offshore-pump-iuput
+----item
+----icon = "__base__/graphics/icons/offshore-pump.png",
+--local offshore_input_item = util.table.deepcopy(data.raw["item"]["offshore-pump"])
+--offshore_input_item.name = "offshore-pump-input"
+--offshore_input_item.place_result = "offshore-pump-input"
+--offshore_input_item.tint = {r = 0.5, g = 1, b = 0.3}
+--data:extend({offshore_input_item})
+--
+--
+----offshore-pump-iuput
+----recipe
+--local offshore_input_recipe = util.table.deepcopy(data.raw["recipe"]["offshore-pump"])
+--offshore_input_recipe.name = "offshore-pump-input"
+--offshore_input_recipe.result = "offshore-pump-input"
+--offshore_input_recipe.tint = {r = 0.5, g = 1, b = 0.3}
+--data:extend({offshore_input_recipe})
+--

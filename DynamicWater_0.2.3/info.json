@@ -1,0 +1,14 @@
+{
+  "name": "DynamicWater",
+  "version": "0.2.3",
+  "factorio_version": "1.0",
+  "title": "Dynamic Water",
+  "author": "yagaodirac",
+  "contact": "yagaodirac@gmail.com",
+  "homepage": "https://mods.factorio.com/mod/DynamicWater",
+  "dependencies": [ "base >= 1.0.0" ],
+  "description": "This mod is designed to work alone because it modifies the behavior of terrian, off shore pump, and bans all kinds of tiles."
+}
+
+
+

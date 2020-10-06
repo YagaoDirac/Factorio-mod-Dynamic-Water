@@ -1,0 +1,18 @@
+Version: 0.2.3
+Date: 2020.10.04
+   Changes:
+      - New terrain generator.
+      - Rain.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.2
+Date: 2020.10.04
+   Info:
+      - Added this file.
+      - Added thumbnail.
+   Translation:
+      - Added simplified Chinese.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.1
+Date: 2020.10.03
+  Info:
+    - Releases.

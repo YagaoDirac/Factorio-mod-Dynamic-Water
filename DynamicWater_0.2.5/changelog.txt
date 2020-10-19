@@ -1,5 +1,15 @@
+Version: 0.2.5
+Date: 2020.10.07
+   Changes:
+      - Terrain generator changed a little, but not good enough yet.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.4
+Date: 2020.10.06
+   Bug fixed:
+      - Zip file works directly now. No need to unzip it any more.
+---------------------------------------------------------------------------------------------------
 Version: 0.2.3
-Date: 2020.10.04
+Date: 2020.10.06
    Changes:
       - New terrain generator.
       - Rain.

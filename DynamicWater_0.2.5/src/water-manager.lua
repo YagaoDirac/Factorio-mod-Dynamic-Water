@@ -289,14 +289,15 @@ function(event)
 
 
 	--Figure out the rivers.
-	for delta_chunk_x = -5,5 do
+	for delta_chunk_x = -7,7 do
 		local testing_chunk_x = chunk_x+delta_chunk_x
-		for delta_chunk_y = -5,5 do
-			local continue = false
-			if (math.abs(delta_chunk_x) +math.abs(delta_chunk_y)>8 )then continue = true
+		for delta_chunk_y = -7,7 do
+			local is_legal_distance = true
+			local xy_distance_by_chunk = math.abs(delta_chunk_x) +math.abs(delta_chunk_y)
+			if (xy_distance_by_chunk> 11 )then is_legal_distance = false
 			end
 
-			if not continue 
+			if is_legal_distance 
 			then
 				local testing_chunk_y = chunk_y+delta_chunk_y
 				if extreme_altitude_manager_has_chunk(testing_chunk_x,testing_chunk_y)--safety
@@ -306,30 +307,100 @@ function(event)
 					--	extreme_altitude_manager[testing_chunk_x][testing_chunk_y] = nil
 					--	break
 					--end
+					local starting_chunk_x = 0
+					local starting_chunk_y = 0
+					local ending_chunk_x = 0
+					local ending_chunk_y = 0
+					local needs_digging = false
+
 
 					if extreme_altitude_manager[testing_chunk_x][testing_chunk_y].b>0 and extreme_altitude_manager[chunk_x][chunk_y].s>0 
 					then	
-						if math.random()<0.1 
+						if math.random()<0.05 
 						then
-							terrain_gen_object.dig_river(
-								{testing_chunk_x*32 +math.random()*20+5,testing_chunk_y*32 +math.random()*20+5},
-								{chunk_x*32 +math.random()*20+5,chunk_y*32 +math.random()*20+5},
-								extreme_altitude_manager[testing_chunk_x][testing_chunk_y].b+ extreme_altitude_manager[chunk_x][chunk_y].s
-								)
+						needs_digging = true
+						starting_chunk_x = testing_chunk_x
+						starting_chunk_y = testing_chunk_y
+						ending_chunk_x = chunk_x
+						ending_chunk_y = chunk_y
 						end
 					end
 					if extreme_altitude_manager[chunk_x][chunk_y].b>0 and extreme_altitude_manager[testing_chunk_x][testing_chunk_y].s>0
 					then	
-						if math.random()<0.1 
+						if math.random()<0.05 
 						then
-							terrain_gen_object.dig_river(
-								{chunk_x*32 +math.random()*20+5,chunk_y*32 +math.random()*20+5},
-								{testing_chunk_x*32 +math.random()*20+5,testing_chunk_y*32 +math.random()*20+5},
-								extreme_altitude_manager[chunk_x][chunk_y].b+ extreme_altitude_manager[testing_chunk_x][testing_chunk_y].s
-								)
+						needs_digging = true
+						starting_chunk_x = chunk_x
+						starting_chunk_y = chunk_y
+						ending_chunk_x = testing_chunk_x
+						ending_chunk_y = testing_chunk_y
 						end
 					end
 
+					if needs_digging
+					then
+						if (xy_distance_by_chunk>3)
+						then--Check the direction of this segment. If this segment aligns along with a mountain or ocean, this is not the legal path for new river.
+							local mid_chunk_x_d = (starting_chunk_x+ending_chunk_x)/2
+							local mid_chunk_y_d = (starting_chunk_y+ending_chunk_y)/2
+							local delta_chunk_x_d = -(ending_chunk_y-starting_chunk_y)/4--x = -y_ori
+							local delta_chunk_y_d = (ending_chunk_x-starting_chunk_x)/4 --y = x_ori
+							local chunk_to_check_altitude_1 = {math.floor(mid_chunk_x_d+delta_chunk_x_d), math.floor(mid_chunk_y_d+delta_chunk_y_d)}
+							local chunk_to_check_altitude_2 = {math.floor(mid_chunk_x_d-delta_chunk_x_d), math.floor(mid_chunk_y_d-delta_chunk_y_d)}
+							local mid_chunk = {math.floor(mid_chunk_x_d),math.floor(mid_chunk_y_d)}
+							if not water_manager_has_chunk(mid_chunk[1],mid_chunk[2])
+							then needs_digging = false
+							else
+								if not water_manager_has_chunk(chunk_to_check_altitude_1[1],chunk_to_check_altitude_1[2])
+								then needs_digging = false
+								else
+									if not water_manager_has_chunk(chunk_to_check_altitude_2[1],chunk_to_check_altitude_2[2])
+									then needs_digging = false
+									else
+										if math.abs(water_manager[mid_chunk[1]][mid_chunk[2]][496].a-15000)>3000
+										then needs_digging = false
+										end
+										if math.abs(water_manager[chunk_to_check_altitude_1[1]][chunk_to_check_altitude_1[2]][496].a - water_manager[mid_chunk[1]][mid_chunk[2]][496].a)>3000
+										then needs_digging = false
+										end
+										if math.abs(water_manager[chunk_to_check_altitude_2[1]][chunk_to_check_altitude_2[2]][496].a - water_manager[mid_chunk[1]][mid_chunk[2]][496].a)>3000
+										then needs_digging = false
+										end
+									end
+								end
+							end
+							if mid_chunk[1]>-4 and mid_chunk[1]<3 then needs_digging = false--spawn zone protection
+							end
+						end--if (xy_distance_by_chunk>3) in this case some more check is needed.
+					end
+
+					if needs_digging
+					then
+						terrain_gen_object.dig_river(
+							{starting_chunk_x*32 +math.random()*20+5,starting_chunk_y*32 +math.random()*20+5},
+							{ending_chunk_x*32 +math.random()*20+5,ending_chunk_y*32 +math.random()*20+5},
+							extreme_altitude_manager[starting_chunk_x][starting_chunk_y].b+ extreme_altitude_manager[ending_chunk_x][ending_chunk_y].s
+							)
+					
+
+						--debug
+						--debug
+						--debug
+						--game.print(game.tick)
+						--game.print(serpent.block({starting_chunk_x,starting_chunk_y,ending_chunk_x,ending_chunk_y}))
+
+
+
+
+					end--if extreme altitude pair occu
+
+
+
+
+
+
+
+						
 				end--safety, if has chunk.
 			end--continue
 
@@ -678,11 +749,23 @@ local function update_waterdepth()
 					for y = 0,31 do
 						index = x+y*32
 						if chunk[index].h >0 
-						then chunk[index].w = chunk[index].w +0.2
+						then chunk[index].w = chunk[index].w +0.4
 						end
 					end
 				end
 			end--if is_raining
+
+			
+			--snowing summit always melts
+			for x = 0,31 do
+				for y = 0,31 do
+					index = x+y*32
+					if chunk[index].h >1 
+					then chunk[index].w = chunk[index].w +0.2
+					end
+				end
+			end
+			--if is_raining
 
 
 			--set_tiles. Set only the changed tiles.

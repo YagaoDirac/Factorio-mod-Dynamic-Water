@@ -1,5 +1,6 @@
 require "util"
-require "new-pumps.new-offshore-pump"
+require "pumps.offshorepump"
+require "tiles.tiles-with-altitude"
 --log(serpent.block(data.raw.character["character"]))
 --require("prototypes.entity.demo-entities")
 --The vanilla off shore pump is not allowed in this mod.

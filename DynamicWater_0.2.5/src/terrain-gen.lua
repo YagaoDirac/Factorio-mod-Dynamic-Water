@@ -128,7 +128,7 @@ local function _gen_1_layer_1(x_y_table)
 	
 	--now it's 0 to 500
 	--(0,30000),(100,20000),(200,15000),(350,10000),(500,5000)
-	if inner_x <100 then return {30000-inner_x*100,1}--snowing summit
+	if inner_x <100 then return {30000-inner_x*100,2}--snowing summit
 	else
 		if	inner_x <200 then return {20000-(inner_x-100)*50,0}
 		else
@@ -146,7 +146,7 @@ local function _gen_2_layer_1_by_altitude(pseudo_altitude)
 	--(parameter, return value)
 	--(30000,30000),(25000,20000),(20000,15000),(12500,10000),(5000,5000)
 	if pseudo_altitude >25000 
-	then result = {___y_from_segment_and_x({30000,30000},{25000,20000},pseudo_altitude),1}--snowing summit
+	then result = {___y_from_segment_and_x({30000,30000},{25000,20000},pseudo_altitude),2}--snowing summit
 	else
 		if	pseudo_altitude >20000 
 		then result = {___y_from_segment_and_x({25000,20000},{20000,15000},pseudo_altitude),0}
@@ -256,7 +256,7 @@ end
 coord_distortion_random_table = {}
 disturbing_scale = 300
 coord_distortion_random_table_big = {}
-disturbing_scale_big = 2000
+disturbing_scale_big = 600
 altitude_random_table = {}
 local function _coord_distortion_noise(x_y_table)
 	local inner_x = x_y_table[1]
@@ -494,6 +494,7 @@ terrain_gen_object.init_altitude_to_water_manager_by_chunk = init_altitude_to_wa
 
 --the parameters: table, [1] for x(world),[2] for y(world)
 local dig_power = 2000
+local init_water_for_river = true
 local function dig_river (start_pt, end_pt, p_river_size)
 
 	--Spawn point protection
@@ -548,8 +549,11 @@ local function dig_river (start_pt, end_pt, p_river_size)
 						then water_manager[chunk_x][chunk_y][local_x+local_y*32].a= 5000
 						else
 							--finally, let's fill the rivers with water.
-							--water_manager[chunk_x][chunk_y][local_x+local_y*32].w 
-							--= water_manager[chunk_x][chunk_y][local_x+local_y*32].w + rational*200
+							if init_water_for_river
+							then
+								water_manager[chunk_x][chunk_y][local_x+local_y*32].w 
+								= water_manager[chunk_x][chunk_y][local_x+local_y*32].w + rational*200
+							end
 						end
 					end
 				end--for y
@@ -579,8 +583,11 @@ local function dig_river (start_pt, end_pt, p_river_size)
 						then water_manager[chunk_x][chunk_y][local_x+local_y*32].a= 5000
 						else
 							--finally, let's fill the rivers with water.
-							--water_manager[chunk_x][chunk_y][local_x+local_y*32].w
-							--= water_manager[chunk_x][chunk_y][local_x+local_y*32].w + rational*200
+							if init_water_for_river
+							then
+								water_manager[chunk_x][chunk_y][local_x+local_y*32].w 
+								= water_manager[chunk_x][chunk_y][local_x+local_y*32].w + rational*200
+							end
 						end
 					end
 				end--for x

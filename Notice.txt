@@ -1,1 +1,0 @@
-For some unknown reason, this mod works only in folder form. If you zip it, it doesn't show in mod list.
